@@ -1,0 +1,8 @@
+interface:
+  display_name: "Client Judgment"
+  short_description: "Clear client replies grounded in delivery evidence"
+  icon_small: "./assets/icon.svg"
+  brand_color: "#2EC9B0"
+  default_prompt: "Use $client-judgment to assess the decision, evidence and commitments, then draft a concise reply."
+policy:
+  allow_implicit_invocation: true
