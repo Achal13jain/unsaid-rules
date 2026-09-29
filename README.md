@@ -25,6 +25,33 @@
 
 ## Install
 
+Choose either the Claude Code plugin or the standalone skill. Installing both copies in Claude Code can make the same skill appear twice.
+
+### Claude Code plugin marketplace
+
+In Claude Code, open **Manage Plugins**, select **Marketplaces**, choose **Add**, and enter:
+
+```text
+https://github.com/Achal13jain/unsaid-rules
+```
+
+Adding the marketplace only makes its catalog available. After it is added, find **Unsaid Rules** in the plugin list and install it.
+
+The same two steps from a terminal are:
+
+```bash
+claude plugin marketplace add Achal13jain/unsaid-rules
+claude plugin install unsaid-rules@unsaid-rules
+```
+
+Invoke the marketplace-installed skill as:
+
+```text
+/unsaid-rules:client-judgment
+```
+
+### Direct skill installation
+
 With the Skills CLI:
 
 ```bash
@@ -41,6 +68,8 @@ Or copy `skills/client-judgment` into your tool's project skill directory:
 | Codex | `.agents/skills/client-judgment/` | `$client-judgment` |
 
 See the [portability guide](skills/client-judgment/references/portability.md) for invocation examples.
+
+For Claude Code, use either `/unsaid-rules:client-judgment` from the plugin or `/client-judgment` from the standalone skill. If one copy is already installed, remove or disable it before switching installation methods.
 
 ## Use it
 
