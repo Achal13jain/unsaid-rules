@@ -1,0 +1,18 @@
+{
+  "name": "unsaid-rules",
+  "displayName": "Unsaid Rules",
+  "version": "1.0.0",
+  "description": "Grounded client communication for software delivery decisions and handovers",
+  "author": {
+    "name": "Achal Jain",
+    "url": "https://github.com/Achal13jain"
+  },
+  "homepage": "https://github.com/Achal13jain/unsaid-rules",
+  "repository": "https://github.com/Achal13jain/unsaid-rules",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "client-communication",
+    "software-delivery"
+  ]
+}

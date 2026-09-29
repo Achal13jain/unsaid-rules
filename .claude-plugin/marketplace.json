@@ -1,0 +1,15 @@
+{
+  "name": "unsaid-rules",
+  "version": "1.0.0",
+  "description": "Agent skills for grounded client communication",
+  "owner": {
+    "name": "Achal Jain",
+    "url": "https://github.com/Achal13jain"
+  },
+  "plugins": [
+    {
+      "name": "unsaid-rules",
+      "source": "."
+    }
+  ]
+}
