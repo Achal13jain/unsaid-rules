@@ -1,8 +1,8 @@
 {
   "name": "unsaid-rules",
   "displayName": "Unsaid Rules",
-  "version": "1.0.0",
-  "description": "Grounded client communication for software delivery decisions and handovers",
+  "version": "1.1.0",
+  "description": "Grounded client communication and professional workplace writing",
   "author": {
     "name": "Achal Jain",
     "url": "https://github.com/Achal13jain"
@@ -13,6 +13,8 @@
   "keywords": [
     "agent-skills",
     "client-communication",
-    "software-delivery"
+    "professional-communication",
+    "software-delivery",
+    "writing"
   ]
 }

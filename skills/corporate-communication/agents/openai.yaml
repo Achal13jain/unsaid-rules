@@ -1,0 +1,8 @@
+interface:
+  display_name: "Corporate Communication"
+  short_description: "Professional rewrites that keep your meaning"
+  icon_small: "./assets/icon.svg"
+  brand_color: "#3D4BC7"
+  default_prompt: "Use $corporate-communication to rewrite this professionally for the right audience and tone, keeping my meaning."
+policy:
+  allow_implicit_invocation: true

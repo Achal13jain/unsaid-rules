@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unsaid Rules</title>
+<meta name="description" content="Unsaid Rules is an open-source repository of two agent skills: Client Judgment keeps client messages grounded in facts and commitments, and Corporate Communication turns casual writing into clear professional language.">
+<meta property="og:title" content="Unsaid Rules">
+<meta property="og:description" content="What to say at work, and how to say it. Two open-source agent skills for Claude Code, Codex and other Agent Skills tools.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111615" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="fonts/ibm-plex-sans-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5.9 13H4.5A2.5 2.5 0 0 1 2 10.5v-6A2.5 2.5 0 0 1 4.5 2h11.9a2.5 2.5 0 0 1 2.5 2.5v6a2.5 2.5 0 0 1-2.5 2.5H12l-1.8 2c-.8.9-1.7.9-2.5 0z' fill='%239BA3A0'/%3E%3Ccircle cx='16.7' cy='11.7' r='3.8' fill='%232EC9B0'/%3E%3Cpath d='M16.7 16.2c3.2 0 5.7 2.3 6.3 5.2.1.7-.3 1.2-1.2 1.2H11.5c-.8 0-1.2-.5-1.1-1.2.6-2.9 3.1-5.2 6.3-5.2z' fill='%232EC9B0'/%3E%3C/svg%3E">
+<script>try { var t = localStorage.getItem("ur-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}</script>
+<style>
+@font-face { font-family: "IBM Plex Sans"; src: url("fonts/ibm-plex-sans-latin-wght.woff2") format("woff2"); font-weight: 100 700; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono-latin-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --bg-soft: #f4f6f5;
+  --ink: #121614;
+  --ink-soft: #545c58;
+  --rule: #e1e5e3;
+  --rule-strong: #c5ccc9;
+  --accent: #0f6e62;
+  --accent-soft: #e1f1ee;
+  --on-accent: #ffffff;
+  --brand: #2ec9b0;
+  --cc: #3d4bc7;
+  --cc-soft: #e8eafc;
+  --fact: #e2f4e8;
+  --fact-line: #1d7f4a;
+  --commit: #e5edfc;
+  --commit-line: #2f5bd3;
+  --next: #fbefd2;
+  --next-line: #946000;
+  --bad: #fde5e2;
+  --bad-line: #b83226;
+  --code-bg: #121614;
+  --code-head: #262c2a;
+  --code-rule: #39413e;
+  --code-ink: #eef2f0;
+  --code-label: #b2bcb8;
+  --focus: #0f6e62;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111615;
+    --bg-soft: #171d1b;
+    --ink: #edf1ef;
+    --ink-soft: #aab4af;
+    --rule: #28302d;
+    --rule-strong: #3a4440;
+    --accent: #5fd4c0;
+    --accent-soft: #143430;
+    --on-accent: #0c1211;
+    --cc: #a3acff;
+    --cc-soft: #1e2246;
+    --fact: #15301f;
+    --fact-line: #63cf8f;
+    --commit: #19244a;
+    --commit-line: #93b2ff;
+    --next: #382d12;
+    --next-line: #f0c062;
+    --bad: #3b1d1a;
+    --bad-line: #ff9384;
+    --code-bg: #0b0f0e;
+    --code-head: #1b2220;
+    --code-rule: #2c3532;
+    --focus: #5fd4c0;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111615;
+  --bg-soft: #171d1b;
+  --ink: #edf1ef;
+  --ink-soft: #aab4af;
+  --rule: #28302d;
+  --rule-strong: #3a4440;
+  --accent: #5fd4c0;
+  --accent-soft: #143430;
+  --on-accent: #0c1211;
+  --cc: #a3acff;
+  --cc-soft: #1e2246;
+  --fact: #15301f;
+  --fact-line: #63cf8f;
+  --commit: #19244a;
+  --commit-line: #93b2ff;
+  --next: #382d12;
+  --next-line: #f0c062;
+  --bad: #3b1d1a;
+  --bad-line: #ff9384;
+  --code-bg: #0b0f0e;
+  --code-head: #1b2220;
+  --code-rule: #2c3532;
+  --focus: #5fd4c0;
+}
+:root[data-theme="light"] { color-scheme: light; }
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--sans); }
+a { color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { margin: 0; line-height: 1.15; font-weight: 600; text-wrap: balance; }
+h2 { font-size: clamp(1.75rem, 3.2vw, 2.375rem); letter-spacing: -0.02em; }
+h3 { font-size: 1.125rem; letter-spacing: -0.01em; }
+p { margin: 0 0 1em; text-wrap: pretty; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+code, pre { font-family: var(--mono); font-size: 0.875em; }
+p code, li code, td code { background: var(--bg-soft); border: 1px solid var(--rule); padding: 0.05em 0.3em; border-radius: 0.25rem; overflow-wrap: anywhere; }
+.wrap { max-width: 80rem; margin: 0 auto; padding: 0 clamp(1.25rem, 3vw, 2rem); }
+.skip { position: absolute; left: 1rem; top: -4rem; background: var(--bg); color: var(--ink); padding: 0.6rem 1rem; border: 2px solid var(--focus); z-index: 20; }
+.skip:focus { top: 1rem; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ic { width: 1.15rem; height: 1.15rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.top { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--rule); }
+.top .wrap { display: flex; align-items: center; gap: 2rem; min-height: 4rem; }
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--ink); text-decoration: none; font-weight: 600; margin-right: auto; }
+.brand svg { width: 1.6rem; height: 1.6rem; }
+.top nav { display: flex; gap: 1.6rem; }
+.top nav a { color: var(--ink-soft); text-decoration: none; font-size: 0.9375rem; }
+.top nav a:hover { color: var(--ink); }
+.top-actions { display: flex; gap: 0.5rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1.15rem; border-radius: 0.5rem; border: 1px solid var(--rule-strong); background: var(--bg); color: var(--ink); font: 600 0.9375rem var(--sans); text-decoration: none; cursor: pointer; transition: background-color 0.15s, border-color 0.15s; }
+.btn:hover { border-color: var(--ink-soft); background: var(--bg-soft); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent); filter: brightness(1.08); }
+.btn-sm { min-height: 2.4rem; padding: 0 0.85rem; }
+.theme-toggle { width: 2.4rem; padding: 0; }
+.theme-toggle[hidden] { display: none; }
+
+.hero { padding-block: clamp(1.5rem, 3.5vw, 2.5rem) 2.5rem; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(24rem, 0.8fr); gap: 3rem; align-items: center; }
+.meta { display: flex; gap: 0.5rem; margin: 0 0 1.5rem; }
+.meta span { font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); border: 1px solid var(--rule-strong); border-radius: 999px; padding: 0.1rem 0.65rem; }
+.hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); letter-spacing: -0.035em; line-height: 1.02; }
+.tagline { font-size: clamp(1.375rem, 2.6vw, 1.875rem); line-height: 1.3; letter-spacing: -0.015em; margin: 1rem 0 1.25rem; max-width: 36rem; }
+.lede { color: var(--ink-soft); max-width: 38rem; margin-bottom: 2rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.chat { margin: 0; border: 1px solid var(--rule); border-radius: 1.25rem; background: var(--bg); overflow: hidden; }
+.chat-head { display: flex; align-items: center; gap: 0.7rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--rule); background: var(--bg-soft); }
+.avatar { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 0.875rem; background: var(--commit); color: var(--commit-line); }
+.chat-title { font-weight: 600; font-size: 0.9375rem; line-height: 1.2; margin-right: auto; }
+.chat-title small { display: block; font-weight: 400; font-size: 0.75rem; color: var(--ink-soft); }
+.chat-play { width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 0.5rem; border: 1px solid var(--rule-strong); background: var(--bg); color: var(--ink-soft); cursor: pointer; }
+.chat-play:hover { color: var(--ink); border-color: var(--ink-soft); }
+.chat-play[hidden] { display: none; }
+.chat-play .ic { width: 0.95rem; height: 0.95rem; }
+.chat-body { display: flex; flex-direction: column; gap: 0.6rem; padding: 1.1rem 1rem; min-height: 19.5rem; }
+.bubble { margin: 0; max-width: 88%; padding: 0.6rem 0.85rem; font-size: 0.9375rem; line-height: 1.5; }
+.them { align-self: flex-start; background: var(--bg-soft); border: 1px solid var(--rule); border-radius: 1rem 1rem 1rem 0.3rem; }
+.you { align-self: flex-end; background: var(--accent-soft); border: 1px solid var(--rule); border-radius: 1rem 1rem 0.3rem 1rem; }
+.typing { display: inline-flex; gap: 0.25rem; padding: 0.75rem 0.9rem; }
+.typing i { width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--ink-soft); animation: blink 1s infinite ease-in-out; }
+.typing i:nth-child(2) { animation-delay: 0.15s; }
+.typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: 0.25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+.caret::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 1px; vertical-align: -0.15em; background: var(--accent); animation: caret 0.8s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.basis { align-self: flex-end; margin: 0; max-width: 88%; font-size: 0.8125rem; color: var(--ink); padding: 0.35rem 0.6rem; border-radius: 0.4rem; background: var(--fact); border-bottom: 2px solid var(--fact-line); }
+.basis span { font-weight: 600; margin-right: 0.4rem; color: var(--fact-line); }
+.pop { animation: pop 0.35s cubic-bezier(0.2, 0.7, 0.3, 1.3) both; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(0.97); } }
+.chat figcaption { padding: 0.6rem 1rem; border-top: 1px solid var(--rule); font-size: 0.75rem; color: var(--ink-soft); }
+.demo { margin-top: 3.5rem; border: 1px solid var(--rule); border-radius: 1rem; overflow: hidden; }
+.demo-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; padding: 0 1.5rem; border-bottom: 1px solid var(--rule); background: var(--bg-soft); }
+.demo-head p { margin: 0; font-size: 0.875rem; color: var(--ink-soft); padding: 0.9rem 0; }
+.utabs { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+.utabs[hidden] { display: none; }
+.utabs [role="tab"] { font: 600 0.9375rem var(--sans); color: var(--ink-soft); background: none; border: 0; border-bottom: 2px solid transparent; padding: 0.95rem 0 0.8rem; cursor: pointer; margin-bottom: -1px; }
+.utabs [role="tab"]:hover { color: var(--ink); }
+.utabs [role="tab"][aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.case { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); }
+.case + .case { border-top: 1px solid var(--rule); }
+.js .case + .case { border-top: 0; }
+.js .case[hidden] { display: none; }
+.situation { padding: 1.5rem; font-size: 0.9375rem; }
+.reply { padding: 1.5rem; border-left: 1px solid var(--rule); }
+.label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-soft); margin: 0 0 0.75rem; }
+.ask { font-size: 1rem; margin: 0 0 1rem; padding-left: 0.9rem; border-left: 2px solid var(--rule-strong); }
+.facts li { position: relative; padding: 0.3rem 0 0.3rem 1rem; color: var(--ink-soft); }
+.facts li::before { content: ""; position: absolute; left: 0; top: 0.85em; width: 0.35rem; height: 0.35rem; border-radius: 50%; background: var(--rule-strong); }
+.views { display: inline-flex; padding: 0.2rem; border: 1px solid var(--rule); border-radius: 0.6rem; margin-bottom: 1rem; background: var(--bg-soft); }
+.views[hidden] { display: none; }
+.views button { font: 600 0.8125rem var(--sans); color: var(--ink-soft); background: none; border: 0; border-radius: 0.45rem; padding: 0.45rem 0.8rem; min-height: 2.25rem; cursor: pointer; }
+.views button[aria-pressed="true"] { background: var(--bg); color: var(--ink); box-shadow: 0 0 0 1px var(--rule-strong); }
+.msg { background: var(--bg); border: 1px solid var(--rule); border-radius: 1rem 1rem 1rem 0.3rem; padding: 1rem 1.15rem; font-size: 1.0625rem; line-height: 1.75; margin: 0 0 1rem; }
+.msg p { margin: 0; }
+.js .case[data-view="good"] .v-draft, .js .case[data-view="draft"] .v-good { display: none; }
+mark { color: inherit; padding: 0.05em 0.15em; border-radius: 0.2rem; border-bottom: 2px solid; background: linear-gradient(var(--tint), var(--tint)) no-repeat 0 0 / 100% 100%; }
+.m-fact { --tint: var(--fact); border-color: var(--fact-line); }
+.m-commit { --tint: var(--commit); border-color: var(--commit-line); }
+.m-next { --tint: var(--next); border-color: var(--next-line); }
+.m-bad { --tint: var(--bad); border-color: var(--bad-line); }
+.js .case .v-good mark, .js .case .v-draft mark { animation: sweep 0.5s ease-out both; animation-delay: calc(var(--i, 0) * 140ms); }
+@keyframes sweep { from { background-size: 0% 100%; border-bottom-color: transparent; } }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.8125rem; color: var(--ink-soft); margin: 0 0 0.75rem; }
+.legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.legend i { width: 0.8rem; height: 0.8rem; border-radius: 0.2rem; border-bottom: 2px solid; }
+.why { font-size: 0.875rem; color: var(--ink-soft); margin: 0; }
+.problems { counter-reset: n; font-size: 0.875rem; color: var(--ink-soft); }
+.problems li { counter-increment: n; position: relative; padding: 0.2rem 0 0.2rem 1.6rem; }
+.problems li::before { content: counter(n); position: absolute; left: 0; top: 0.3rem; width: 1.15rem; height: 1.15rem; border-radius: 50%; display: grid; place-items: center; font-size: 0.6875rem; font-weight: 600; background: var(--bad); color: var(--bad-line); }
+mark sup { font-size: 0.65em; font-weight: 700; color: var(--bad-line); margin-left: 0.15em; }
+html:not(.js) .v-draft, html:not(.js) .v-good { display: block; }
+
+section.band { padding: clamp(3.5rem, 8vw, 5.5rem) 0; border-top: 1px solid var(--rule); }
+.band-head { max-width: 42rem; margin-bottom: 2.5rem; }
+.band-head p { color: var(--ink-soft); margin: 0.9rem 0 0; font-size: 1.0625rem; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-bottom: 3.5rem; }
+.three div { border-top: 3px solid var(--line); padding-top: 1rem; }
+.three h3 { margin-bottom: 0.4rem; }
+.three p { color: var(--ink-soft); margin: 0; }
+.t-fact { --line: var(--fact-line); }
+.t-commit { --line: var(--commit-line); }
+.t-next { --line: var(--next-line); }
+.guide h3 { margin-bottom: 1rem; }
+.guide dl { margin: 0; border-top: 1px solid var(--rule); }
+.guide dl div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.5rem 2.5rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+.guide dt { font-weight: 600; }
+.guide dd { margin: 0; color: var(--ink-soft); }
+
+details { border-top: 1px solid var(--rule); }
+details:last-of-type { border-bottom: 1px solid var(--rule); }
+summary { list-style: none; display: flex; align-items: baseline; gap: 1rem; padding: 1.05rem 0; cursor: pointer; font-weight: 600; }
+summary::-webkit-details-marker { display: none; }
+summary .n { font-size: 0.8125rem; color: var(--ink-soft); font-weight: 600; width: 1.5rem; flex: none; }
+summary::after { content: ""; margin-left: auto; width: 0.55rem; height: 0.55rem; border-right: 1.8px solid var(--ink-soft); border-bottom: 1.8px solid var(--ink-soft); transform: rotate(45deg) translateY(-0.2rem); transition: transform 0.2s; flex: none; }
+details[open] summary::after { transform: rotate(225deg) translateY(-0.1rem); }
+summary:hover { color: var(--accent); }
+.scn { padding: 0 0 1.5rem 2.5rem; max-width: 46rem; }
+.scn .facts-p { color: var(--ink-soft); font-size: 0.9375rem; }
+.scn .msg { font-size: 1rem; }
+.scn .note { font-size: 0.875rem; color: var(--ink-soft); margin: 0; }
+.wording { margin-top: 4rem; }
+.wording h3 { margin-bottom: 1rem; }
+.rows { border-top: 1px solid var(--rule); }
+.rows li { display: grid; grid-template-columns: 13rem minmax(0, 1fr) minmax(0, 1.2fr); gap: 0.4rem 2rem; padding: 0.95rem 0; border-bottom: 1px solid var(--rule); font-size: 0.9375rem; }
+.rows q { font-weight: 600; quotes: "\201C" "\201D"; }
+.rows .risk { color: var(--ink-soft); }
+
+/* Leave room for the sticky header when the page jumps to a link target. */
+section, .skills, .skill-panel, [id] { scroll-margin-top: 5rem; }
+.hero { scroll-margin-top: 8rem; }
+.skills { padding-top: 0.5rem; }
+.which { font-size: 0.9375rem; color: var(--ink-soft); max-width: 54rem; margin: 0 0 1rem; }
+.which strong { color: var(--ink); margin-right: 0.4rem; }
+.skill-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+.skill-tabs[hidden] { display: none; }
+.skill-tabs [role="tab"] { --tab: var(--accent); text-align: left; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 0.9rem; padding: 0.9rem 1.1rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+.skill-tabs .tab-cc { --tab: var(--cc); }
+.skill-tabs [role="tab"]:hover { border-color: var(--rule-strong); }
+.skill-tabs [role="tab"][aria-selected="true"] { border-color: var(--tab); box-shadow: inset 0 -3px 0 var(--tab); }
+.skill-tabs strong { display: flex; align-items: center; gap: 0.5rem; font-size: 1.0625rem; }
+.skill-tabs small { display: block; color: var(--ink-soft); font-size: 0.875rem; }
+.new { font-size: 0.6875rem; font-weight: 600; padding: 0.05rem 0.45rem; border-radius: 999px; background: var(--cc-soft); color: var(--cc); }
+.skill-panel > .wrap > .demo { margin-top: 0; }
+html:not(.js) .skill-panel + .skill-panel { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+.cc { --accent: var(--cc); --accent-soft: var(--cc-soft); }
+.rough { font-size: 1.0625rem; margin: 0 0 1rem; padding: 0.8rem 1rem; border: 1px dashed var(--rule-strong); border-radius: 0.6rem; background: var(--bg-soft); font-style: italic; }
+.setting { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; }
+.setting span { font-size: 0.8125rem; font-weight: 600; padding: 0.15rem 0.6rem; border-radius: 999px; background: var(--cc-soft); color: var(--cc); }
+.cc .v-good .msg { background: var(--cc-soft); }
+.js .cc .v-good .msg p { animation: settle 0.5s ease-out both; }
+@keyframes settle { from { opacity: 0; filter: blur(3px); } }
+.trace { font-size: 0.875rem; color: var(--ink-soft); margin: 0 0 0.35rem; }
+.trace strong { color: var(--ink); }
+.note-you { margin-top: 0.6rem; padding: 0.55rem 0.75rem; border-left: 3px solid var(--next-line); background: var(--next); border-radius: 0 0.4rem 0.4rem 0; color: var(--ink); }
+.t-cc { --line: var(--cc); }
+.t-read { --line: var(--rule-strong); }
+.split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; }
+.tones h3 { margin-bottom: 1rem; }
+.tones ul { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.tones li { padding: 0.85rem 1rem; border: 1px solid var(--rule); border-radius: 0.7rem; font-size: 0.875rem; color: var(--ink-soft); }
+.tones strong { display: block; color: var(--ink); font-size: 0.9375rem; }
+.flips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 3rem; }
+.flips button { display: inline-grid; font: 600 0.9375rem var(--sans); border: 1px solid var(--rule-strong); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 0.55rem 1rem; cursor: pointer; transition: border-color 0.15s, background-color 0.15s; }
+.flips button > span:not(.vh) { grid-area: 1 / 1; text-align: center; transition: opacity 0.2s, transform 0.2s; }
+.flips .was { text-decoration: line-through; text-decoration-color: var(--bad-line); text-decoration-thickness: 2px; }
+.flips .now { opacity: 0; transform: translateY(6px); color: var(--cc); }
+.flips button:hover { border-color: var(--cc); }
+.flips [aria-pressed="true"] { border-color: var(--cc); background: var(--cc-soft); }
+.flips [aria-pressed="true"] .was { opacity: 0; transform: translateY(-6px); }
+.flips [aria-pressed="true"] .now { opacity: 1; transform: none; }
+.where h3, .ways h3 { margin-bottom: 0.75rem; }
+.ways { margin: -1rem 0 3.5rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; }
+.tags span { font-size: 0.875rem; padding: 0.3rem 0.75rem; border-radius: 999px; background: var(--bg-soft); border: 1px solid var(--rule); color: var(--ink-soft); }
+.notice { font-size: 0.9375rem; color: var(--ink-soft); padding: 0.75rem 1rem; border-left: 3px solid var(--next-line); background: var(--next); border-radius: 0 0.4rem 0.4rem 0; margin: 0 0 1.5rem; }
+.itabs { border-bottom: 1px solid var(--rule); margin-bottom: 1.75rem; }
+.panel[hidden] { display: none; }
+.js .panel > h3 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+html:not(.js) .panel + .panel { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+.panel > h3, .route h4 { margin: 0 0 0.75rem; font-size: 1.0625rem; }
+.route + .route { margin-top: 2rem; padding-top: 1.75rem; border-top: 1px dashed var(--rule-strong); }
+.panel p { max-width: 46rem; }
+.code { background: var(--code-bg); border: 1px solid var(--code-rule); border-radius: 0.6rem; overflow: hidden; margin: 0 0 1rem; max-width: 48rem; }
+.code-head { display: flex; align-items: center; justify-content: space-between; min-height: 2.25rem; padding: 0.3rem 0.4rem 0.3rem 1rem; background: var(--code-head); border-bottom: 1px solid var(--code-rule); color: var(--code-label); font-size: 0.8125rem; font-weight: 600; }
+.code pre { margin: 0; padding: 0.85rem 1rem; overflow-x: auto; color: var(--code-ink); line-height: 1.55; }
+.code code { font-size: 1em; }
+.copy { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 0.45rem; cursor: pointer; background: transparent; color: var(--code-label); border: 1px solid var(--code-rule); }
+.copy:hover { color: var(--code-ink); border-color: var(--code-label); }
+.copy.done { color: var(--brand); border-color: var(--brand); }
+.copy .ic { width: 1rem; height: 1rem; }
+.tip { font-size: 0.9375rem; padding: 0.75rem 1rem; border-radius: 0.5rem; background: var(--accent-soft); }
+.then { margin-top: 3rem; max-width: 48rem; }
+.then h3 { margin-bottom: 0.75rem; }
+
+.close { display: grid; grid-template-columns: 1.3fr 1fr; gap: 3.5rem; }
+.close ul li { position: relative; padding: 0.45rem 0 0.45rem 1.6rem; color: var(--ink-soft); }
+.close ul li svg { position: absolute; left: 0; top: 0.75rem; color: var(--accent); }
+.close h2 { font-size: clamp(1.5rem, 2.6vw, 1.875rem); margin-bottom: 1.25rem; }
+.status { padding: 1.5rem; border: 1px solid var(--rule); border-radius: 1rem; align-self: start; }
+.status h3 { margin-bottom: 0.6rem; }
+.status p { color: var(--ink-soft); font-size: 0.9375rem; }
+.status p:last-child { margin: 0; }
+
+footer { border-top: 1px solid var(--rule); padding: 2.5rem 0 3rem; font-size: 0.9375rem; color: var(--ink-soft); }
+.foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; }
+.foot p { margin: 0 0 0.5rem; }
+footer h2 { font-size: 0.9375rem; color: var(--ink); margin-bottom: 0.5rem; letter-spacing: 0; }
+footer li { padding: 0.2rem 0; }
+
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .chat { max-width: 30rem; }
+  .chat-body { min-height: 22rem; }
+}
+@media (max-width: 900px) {
+  .split { grid-template-columns: 1fr; gap: 2.5rem; }
+  .case { grid-template-columns: 1fr; }
+  .reply { border-left: 0; border-top: 1px solid var(--rule); }
+  .three, .close, .foot { grid-template-columns: 1fr; gap: 2rem; }
+  .rows li { grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  .skill-tabs { grid-template-columns: 1fr; }
+  .tones ul { grid-template-columns: 1fr; }
+  .top nav { display: none; }
+  .guide dl div { grid-template-columns: 1fr; }
+  .scn { padding-left: 0; }
+  .demo-head { padding: 0 1rem; }
+  .situation, .reply { padding: 1.15rem 1rem; }
+}
+@media (max-width: 420px) {
+  .brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .gh-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-gh" viewBox="0 0 16 16"><path style="fill:currentColor;stroke:none" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M15 9V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" style="fill:currentColor"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></symbol>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.93 13H4.53A2.5 2.5 0 0 1 2.03 10.5v-6A2.5 2.5 0 0 1 4.53 2h11.91a2.5 2.5 0 0 1 2.5 2.5v6a2.5 2.5 0 0 1-2.5 2.5h-4.43l-1.8 2c-.79.88-1.69.88-2.48 0z" style="fill:var(--rule-strong)"/><path d="M5.8 5.3h8.85a.7.7 0 0 1 0 1.4H5.8a.7.7 0 0 1 0-1.4zM5.8 8.3h5.5a.7.7 0 0 1 0 1.4H5.8a.7.7 0 0 1 0-1.4z" style="fill:var(--ink-soft)"/><circle cx="16.68" cy="11.72" r="3.81" style="fill:var(--brand)"/><path d="M16.7 16.21c3.17 0 5.67 2.25 6.28 5.14.15.75-.27 1.27-1.15 1.27H11.55c-.88 0-1.3-.52-1.15-1.27.61-2.89 3.12-5.14 6.3-5.14z" style="fill:var(--brand)"/></svg><span>Unsaid Rules</span></a>
+    <nav aria-label="Sections">
+      <a href="#client-judgment">Client Judgment</a>
+      <a href="#corporate-communication">Corporate Communication</a>
+      <a href="#install">Install</a>
+    </nav>
+    <div class="top-actions">
+      <button type="button" class="btn btn-sm theme-toggle" hidden><svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg></button>
+      <a class="btn btn-sm" href="https://github.com/Achal13jain/unsaid-rules"><svg class="ic" aria-hidden="true"><use href="#i-gh"/></svg><span class="gh-label">View on GitHub</span></a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap hero" id="top">
+    <div class="hero-grid">
+      <div>
+      <p class="meta"><span>v1.1.0</span><span>MIT license</span><span>Two skills</span></p>
+      <h1>Unsaid Rules</h1>
+      <p class="tagline">What to say at work, and how to say it.</p>
+      <p class="lede">Unsaid Rules is an open-source repository of two agent skills. Client Judgment keeps client messages grounded in facts and agreed commitments. Corporate Communication turns rough or casual writing into clear professional language without changing what you mean.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#install">Install</a>
+        <a class="btn" href="https://github.com/Achal13jain/unsaid-rules"><svg class="ic" aria-hidden="true"><use href="#i-gh"/></svg>View on GitHub</a>
+      </div>
+      </div>
+      <figure class="chat" aria-labelledby="chat-cap">
+        <div class="chat-head">
+          <span class="avatar" aria-hidden="true">C</span>
+          <span class="chat-title">Client<small>Typical questions</small></span>
+          <button type="button" class="chat-play" hidden><svg class="ic" aria-hidden="true"><use href="#i-pause"/></svg></button>
+        </div>
+        <div class="chat-body">
+          <p class="bubble them">done?</p>
+          <p class="bubble you">Yep, fixed and checked on the live site.</p>
+          <p class="basis"><span>Rests on</span>The fix is deployed and checked on the live site.</p>
+        </div>
+        <figcaption id="chat-cap">Client Judgment replies from the skill's fictional scenarios.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section class="skills" id="skills" aria-label="The two skills" data-tabs>
+    <div class="wrap">
+      <p class="which"><strong>Which skill do I need?</strong>Client Judgment decides what you can truthfully say and promise. Corporate Communication decides how to say it. For a client delivery message, use both.</p>
+      <div class="skill-tabs" role="tablist" aria-label="Skills" hidden>
+        <button type="button" role="tab" aria-controls="client-judgment"><strong>Client Judgment</strong><small>What can I truthfully say?</small></button>
+        <button type="button" role="tab" aria-controls="corporate-communication" class="tab-cc"><strong>Corporate Communication <span class="new">New</span></strong><small>How should I say it?</small></button>
+      </div>
+    </div>
+    <div class="skill-panel" id="client-judgment">
+      <div class="wrap">
+        <div class="demo" data-tabs>
+          <div class="demo-head">
+            <div class="utabs" role="tablist" aria-label="Worked examples" hidden>
+              <button type="button" role="tab" aria-controls="c-ready">Is it ready?</button>
+              <button type="button" role="tab" aria-controls="c-delay">A delay</button>
+              <button type="button" role="tab" aria-controls="c-yes">Just say yes</button>
+            </div>
+            <p>Worked examples from the skill. All are fictional.</p>
+          </div>
+
+          <div class="case" id="c-ready" data-view="good">
+            <div class="situation">
+              <p class="label">The situation</p>
+              <p class="ask">A founder asks whether the site is ready to share with prospects for customer interviews, and whether mobile is complete.</p>
+              <ul class="facts">
+                <li>Mobile checks passed on the developer's phone and the founder's iPhone only. The developer has said they will check two more devices today.</li>
+                <li>The inquiry form is not connected. CRM setup is pending, with no date.</li>
+                <li>The legal pages contain placeholder company details.</li>
+                <li>Four footer icons have no destination, and the developer has said they will hide them.</li>
+                <li>The developer has agreed to send the device results and say when the form is live.</li>
+              </ul>
+            </div>
+            <div class="reply">
+              <p class="label">The reply</p>
+              <div class="views" role="group" aria-label="Which reply to show" hidden><button type="button" data-v="draft" aria-pressed="false">Misleading draft</button><button type="button" data-v="good" aria-pressed="true">Grounded reply</button></div>
+              <div class="v-draft">
+                <div class="msg"><p><mark class="m-bad" style="--i:0">Mobile is complete from my side.<sup>1</sup></mark> <mark class="m-bad" style="--i:1">Yes, it's fine to share,<sup>2</sup></mark> with three things to know: the form isn't connected, the legal pages have placeholders, and the social icons don't link anywhere. Send me the links, or I can hide them. <mark class="m-bad" style="--i:2">If anyone notices something off, send me their device.<sup>3</sup></mark></p></div>
+                <ol class="problems">
+                  <li>Device coverage is overstated: only two phones were checked.</li>
+                  <li>The readiness claim conflicts with the known broken prospect journey.</li>
+                  <li>Audience feedback stands in for checks the developer should make.</li>
+                </ol>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p><mark class="m-fact" style="--i:0"><span class="vh">Fact: </span>Mobile is confirmed on your iPhone and mine;</mark> <mark class="m-commit" style="--i:1"><span class="vh">Commitment: </span>I'll check two more devices today and send you the result.</mark> <mark class="m-fact" style="--i:2"><span class="vh">Fact: </span>Before sharing with prospects, two things need closing: the inquiry form isn't receiving messages until the CRM is connected, and the legal pages still show placeholder company details.</mark> <mark class="m-commit" style="--i:3"><span class="vh">Commitment: </span>I'll hide the unlinked footer icons.</mark> <mark class="m-next" style="--i:4"><span class="vh">Next step: </span>I need the registered company name and address from you for the legal pages,</mark> <mark class="m-commit" style="--i:5"><span class="vh">Commitment: </span>and I'll let you know as soon as the form is live.</mark></p></div>
+                <p class="legend" aria-hidden="true"><span><i class="m-fact" style="background:var(--fact)"></i>Fact</span><span><i class="m-commit" style="background:var(--commit)"></i>Commitment</span><span><i class="m-next" style="background:var(--next)"></i>Next step</span></p>
+                <p class="why">Nothing about the CRM date is invented, and every "I'll" rests on a stated intention, not on capacity or permission.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case" id="c-delay" data-view="good">
+            <div class="situation">
+              <p class="label">The situation</p>
+              <p class="ask">Checkout will miss its Friday delivery, and the client's campaign depends on it.</p>
+              <ul class="facts">
+                <li>The provider quotes about two business days for a compliance review, so Tuesday is an estimate, not a commitment.</li>
+                <li>The client's campaign email goes out on Wednesday.</li>
+                <li>The sender left the review out of their estimate.</li>
+                <li>The sender has said they will check with the provider first thing Monday and message the client either way.</li>
+              </ul>
+            </div>
+            <div class="reply">
+              <p class="label">The reply</p>
+              <div class="views" role="group" aria-label="Which reply to show" hidden><button type="button" data-v="draft" aria-pressed="false">Hedged draft</button><button type="button" data-v="good" aria-pressed="true">Grounded reply</button></div>
+              <div class="v-draft">
+                <div class="msg"><p>We won't meet Friday. Tuesday is a realistic target, subject to approval. That puts Wednesday's campaign at risk; <mark class="m-bad" style="--i:0">please keep its timing provisional until approval is confirmed.<sup>1</sup></mark></p></div>
+                <ol class="problems">
+                  <li>It is honest, and asking the client to keep the send decision open is legitimate, but nothing from the sender is attached to it.</li>
+                </ol>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p><mark class="m-fact" style="--i:0"><span class="vh">Fact: </span>Checkout won't be live Friday; I left the provider's compliance review out of my estimate.</mark> <mark class="m-fact" style="--i:1"><span class="vh">Fact: </span>They quote two business days, so Tuesday is the current estimate, not yet confirmed.</mark> Because your campaign goes Wednesday, <mark class="m-commit" style="--i:2"><span class="vh">Commitment: </span>I'll check with them first thing Monday and message you either way,</mark> <mark class="m-next" style="--i:3"><span class="vh">Next step: </span>so you can decide whether to keep Wednesday's send.</mark></p></div>
+                <p class="legend" aria-hidden="true"><span><i class="m-fact" style="background:var(--fact)"></i>Fact</span><span><i class="m-commit" style="background:var(--commit)"></i>Commitment</span><span><i class="m-next" style="background:var(--next)"></i>Next step</span></p>
+                <p class="why">The Monday check is the sender's stated intention. Without one, the skill offers a check only if capacity is known, or recommends it privately to the user.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case" id="c-yes" data-view="good">
+            <div class="situation">
+              <p class="label">The situation</p>
+              <p class="ask">"Client asked if the pricing page is finished. Just write 'yes, all done'."</p>
+              <ul class="facts">
+                <li>The source has a TODO where the enterprise price should be.</li>
+                <li>The "Contact sales" button opens a test email address.</li>
+                <li>Production has not been checked.</li>
+              </ul>
+            </div>
+            <div class="reply">
+              <p class="label">The reply</p>
+              <div class="views" role="group" aria-label="Which reply to show" hidden><button type="button" data-v="draft" aria-pressed="false">Requested reply</button><button type="button" data-v="good" aria-pressed="true">Grounded reply</button></div>
+              <div class="v-draft">
+                <div class="msg"><p><mark class="m-bad" style="--i:0">Yes, all done.<sup>1</sup></mark></p></div>
+                <ol class="problems">
+                  <li>A request to say all done does not justify a completion claim the evidence does not support.</li>
+                </ol>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p><mark class="m-fact" style="--i:0"><span class="vh">Fact: </span>I can't confirm it is ready yet: the current source still has an unresolved enterprise price and a test sales address.</mark> <mark class="m-next" style="--i:1"><span class="vh">Next step: </span>These need resolving and checking on the live page before sign-off.</mark></p></div>
+                <p class="legend" aria-hidden="true"><span><i class="m-fact" style="background:var(--fact)"></i>Fact</span><span><i class="m-next" style="background:var(--next)"></i>Next step</span></p>
+                <p class="why">First, the skill tells the user what it found, and keeps findings in the source separate from what is visible on the live site.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="band" id="how" aria-labelledby="how-h">
+        <div class="wrap">
+          <div class="band-head">
+            <h2 id="how-h">It separates what happened from what was promised.</h2>
+            <p>Every reply rests on three distinctions, and the answer matches what the evidence supports.</p>
+          </div>
+          <div class="three">
+            <div class="t-fact"><h3>Facts</h3><p>What was implemented, tested, deployed or accepted.</p></div>
+            <div class="t-commit"><h3>Commitments</h3><p>What the sender has agreed or is authorized to promise.</p></div>
+            <div class="t-next"><h3>Next steps</h3><p>What can reasonably be proposed without presenting it as completed or scheduled.</p></div>
+          </div>
+          <div class="guide">
+            <h3>How it chooses the answer</h3>
+            <dl>
+              <div><dt>The relevant checks passed, with no known consequential blocker</dt><dd>A clear yes for the stated use, without speculative caveats or approval gates.</dd></div>
+              <div><dt>A known issue undermines that use</dt><dd>Not yet, with the business effect and the next step.</dd></div>
+              <div><dt>A known limitation does not prevent that use</dt><dd>A bounded yes, with the relevant limitation.</dd></div>
+              <div><dt>A critical fact is missing</dt><dd>A check where one is possible; otherwise one focused question or a clearly interim draft.</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="situations" aria-labelledby="sit-h">
+        <div class="wrap">
+          <div class="band-head">
+            <h2 id="sit-h">Eight situations, one way of thinking.</h2>
+            <p>The skill's own scenarios. All are fictional, and each reply uses only the facts given for it.</p>
+          </div>
+          <details>
+            <summary><span class="n">1</span>Prospects browsing a site with known blockers</summary>
+            <div class="scn">
+              <p class="facts-p">The client asks if mobile and tablet are complete and whether prospects can browse the live site. Only two phones have been checked, and no tablet result is available. The live inquiry form drops submissions, and the legal pages display placeholder company details. No repair schedule or follow-up is established.</p>
+              <div class="msg"><p>The site needs the inquiry form and company details resolved before prospects browse it: inquiries are not arriving, and the legal pages still contain placeholders. Mobile checks passed on two phones; tablet testing remains unconfirmed. Please send the approved company details for the legal pages.</p></div>
+              <p class="note">No "today", no claimed fixes and no extra device coverage, and the known blockers are not hidden behind a vague promise of a final review.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="n">2</span>Verified readiness gets a direct yes</summary>
+            <div class="scn">
+              <p class="facts-p">The agreed mobile and tablet checks and inquiry delivery are verified on the live site, with no known blockers. The client asks about interviews and starting the German version, which is in the agreed scope, with approved copy ready.</p>
+              <div class="msg"><p>The LinkedIn link is updated, and the mobile and tablet work is complete. Yes, the site is ready to share for your interviews. We can start the German version next using the approved copy.</p></div>
+              <p class="note">It does not ask for the copy again or invent an extra review.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="n">3</span>A delay with no agreed update time</summary>
+            <div class="scn">
+              <p class="facts-p">Friday delivery will be missed because a required provider review was left out of the estimate. Tuesday is a target, and the client's Wednesday campaign depends on checkout. The sender has said they will chase the provider and update the client when they hear back, with no time set.</p>
+              <div class="msg"><p>Checkout won't be live Friday; I missed the provider review in my estimate. Tuesday is the current target, subject to approval, so Wednesday's campaign is at risk. I'll chase the provider and let you know as soon as I hear, so you can decide on the campaign timing with that in hand.</p></div>
+              <p class="note">The campaign decision stays with the client and the chase stays with the sender, tied to a trigger because no time is agreed. Outside the draft, the skill recommends agreeing a check-in before the client's deadline.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="n">4</span>A delay with a promised update</summary>
+            <div class="scn">
+              <p class="facts-p">The same delay, but the sender has explicitly said they will check the review and update the client on Monday at 10:00, even if approval is still pending.</p>
+              <div class="msg"><p>Checkout won't be live Friday; I missed the provider review in my estimate. Tuesday is the current target, subject to approval. That puts Wednesday's campaign at risk. I'll check the status and update you Monday at 10:00, even if the review is still pending, so you can decide on the campaign timing.</p></div>
+              <p class="note">The update commitment does not guarantee the provider's answer or a successful launch.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="n">5</span>Staging passed, deployment pending</summary>
+            <div class="scn">
+              <p class="facts-p">The client asks if the live site is ready for a demo. The checks passed on staging, but production deployment is pending. The sender says they will deploy now, verify in production and message the client with the result.</p>
+              <div class="msg"><p>The staging checks have passed, but the update isn't live yet. I'll deploy now and message you as soon as it's confirmed on the live site; treat that message as the go-ahead for the demo.</p></div>
+              <p class="note">Drafting does not deploy anything. The draft records the sender's stated intention, and the sender carries it out.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="n">6</span>A source warning versus live evidence</summary>
+            <div class="scn">
+              <p class="facts-p">A TODO exists in the pricing source, but the user has verified that the live page shows the approved price and that its contact link works.</p>
+              <div class="msg"><p>Yes, the pricing page is ready. The approved price is displayed correctly on the live site, and the contact link has been checked.</p></div>
+              <p class="note">With source evidence alone, it flags the possible problem without claiming it is visible in production.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="n">7</span>Extra work and commercial authority</summary>
+            <div class="scn">
+              <p class="facts-p">A booking portal is outside the agreed scope and has no estimate. The sender may gather requirements, but the project manager approves pricing. The client asks for Friday delivery at no extra cost.</p>
+              <div class="msg"><p>The booking portal would extend the agreed scope. I can gather the requirements for the PM to assess timing and pricing, but I can't confirm Friday delivery or include it at the current price.</p></div>
+              <p class="note">If the contract scope is unknown, it explains the effort and proposes checking the agreement instead of declaring the work out of scope.</p>
+            </div>
+          </details>
+          <details>
+            <summary><span class="n">8</span>A routine confirmation</summary>
+            <div class="scn">
+              <p class="facts-p">A long-term client asks "done?" about a corrected typo. The fix is deployed and checked live, and the relationship is casual.</p>
+              <div class="msg"><p>Yep, fixed and checked on the live site.</p></div>
+              <p class="note">No audit, new offer or disclaimer is needed.</p>
+            </div>
+          </details>
+
+          <div class="wording">
+            <h3>Wording it looks at twice</h3>
+            <ul class="rows">
+              <li><q>Should be fine</q><span class="risk">When the recipient needs an evidenced readiness decision.</span><span>If checks passed, state the scoped result. If not, state the unknown that changes the decision.</span></li>
+              <li><q>Let me know if anything breaks</q><span class="risk">When it is used instead of establishing readiness.</span><span>State the relevant verification first, and keep a support offer only if the agreement covers it.</span></li>
+              <li><q>Your old browser caused it</q><span class="risk">When the diagnosis is unconfirmed or blame is unnecessary.</span><span>Describe the observed issue neutrally, and the confirmed fix if there is one.</span></li>
+              <li><q>I'll try for Tuesday</q><span class="risk">When the real status is an estimate.</span><span>State Tuesday as an estimate with its dependency, without upgrading it to a promise.</span></li>
+              <li><q>As per my last email</q><span class="risk">When the exchange is already strained.</span><span>Restate the necessary fact briefly, without reprimanding the recipient.</span></li>
+              <li><q>No worries!</q><span class="risk">When it answers a confirmed business disruption.</span><span>Acknowledge the concrete effect and the supported recovery.</span></li>
+              <li><q>Just a quick addition</q><span class="risk">When extra functionality affects scope.</span><span>Explain the verified trade-off and offer assessed options, without inventing a cost or date.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="skill-panel cc" id="corporate-communication">
+      <div class="wrap">
+        <div class="demo" data-tabs>
+          <div class="demo-head">
+            <div class="utabs" role="tablist" aria-label="Rewrite examples" hidden>
+              <button type="button" role="tab" aria-controls="cc-blame">Feeling blamed</button>
+              <button type="button" role="tab" aria-controls="cc-scope">Scope pushback</button>
+              <button type="button" role="tab" aria-controls="cc-exec">Delay for an executive</button>
+              <button type="button" role="tab" aria-controls="cc-boundary">A boundary</button>
+              <button type="button" role="tab" aria-controls="cc-slack">Slack status</button>
+            </div>
+            <p>Examples from the skill. All are fictional.</p>
+          </div>
+
+          <div class="case" id="cc-blame" data-view="good">
+            <div class="situation">
+              <p class="label">What you wrote</p>
+              <p class="rough">I did the work, but nobody told me what to do next. Now they're blaming me for the delay.</p>
+              <p class="setting"><span>To: Manager</span><span>Tone: Diplomatic</span></p>
+            </div>
+            <div class="reply">
+              <p class="label">What you send</p>
+              <div class="views" role="group" aria-label="Which version to show" hidden><button type="button" data-v="draft" aria-pressed="false">Jargon version</button><button type="button" data-v="good" aria-pressed="true">Professional version</button></div>
+              <div class="v-draft">
+                <div class="msg"><p><mark class="m-bad" style="--i:0">Per my previous communications,</mark> the deliverables were <mark class="m-bad" style="--i:1">actioned</mark>; however, <mark class="m-bad" style="--i:2">downstream alignment was not socialized</mark>, which impacted timelines. Let's <mark class="m-bad" style="--i:3">circle back to synergize</mark> on process going forward.</p></div>
+                <p class="why">Why not: it sounds formal, but it hides who did what and never says what you need.</p>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p>I completed the assigned work, but I didn't receive the next steps, and that contributed to the delay. I'd like to make sure that context is understood, and to agree on how hand-offs should work so it doesn't happen again.</p></div>
+                <p class="trace"><strong>Kept:</strong> the finished work, the missing next steps, the cause of the delay, and your wish to fix the process.</p>
+                <p class="trace"><strong>Left out:</strong> the accusation, and the guess about what others think.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case" id="cc-scope" data-view="good">
+            <div class="situation">
+              <p class="label">What you wrote</p>
+              <p class="rough">no we can't just add that, it's way more work than you think and it wasn't in the deal</p>
+              <p class="setting"><span>To: Client</span><span>Tone: Client-friendly</span></p>
+            </div>
+            <div class="reply">
+              <p class="label">What you send</p>
+              <div class="views" role="group" aria-label="Which version to show" hidden><button type="button" data-v="draft" aria-pressed="false">Jargon version</button><button type="button" data-v="good" aria-pressed="true">Professional version</button></div>
+              <div class="v-draft">
+                <div class="msg"><p>Unfortunately, this request falls outside the <mark class="m-bad" style="--i:0">agreed parameters of the current engagement</mark> and would require significant <mark class="m-bad" style="--i:1">additional bandwidth to action</mark>.</p></div>
+                <p class="why">Why not: it is wordy and cold, and it buries the plain answer.</p>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p>That feature isn't part of the agreed scope, and it's a larger piece of work than it may appear, so we can't add it as things stand.</p></div>
+                <p class="trace"><strong>Kept:</strong> the no, the size of the work, and the agreed scope.</p>
+                <p class="trace"><strong>Left out:</strong> "than you think", which sounds dismissive.</p>
+                <p class="trace note-you"><strong>Note to you:</strong> if you can offer an estimate, add it yourself. The rewrite never offers work you did not offer.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case" id="cc-exec" data-view="good">
+            <div class="situation">
+              <p class="label">What you wrote</p>
+              <p class="rough">ugh the release slipped again bc the vendor api keeps breaking, we're stuck till they fix it, idk when</p>
+              <p class="setting"><span>To: Executive</span><span>Tone: Executive and concise</span></p>
+            </div>
+            <div class="reply">
+              <p class="label">What you send</p>
+              <div class="views" role="group" aria-label="Which version to show" hidden><button type="button" data-v="draft" aria-pressed="false">Jargon version</button><button type="button" data-v="good" aria-pressed="true">Professional version</button></div>
+              <div class="v-draft">
+                <div class="msg"><p>Due to ongoing <mark class="m-bad" style="--i:0">third-party integration challenges</mark>, the release timeline has been impacted. <mark class="m-bad" style="--i:1">We are actively monitoring the situation and will provide updates</mark> as they become available.</p></div>
+                <p class="why">Why not: it is vague about the cause, and it promises monitoring and updates you never mentioned.</p>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p>The release has slipped again. The vendor's API keeps failing, and we're blocked until they fix it. We don't have a new date yet.</p></div>
+                <p class="trace"><strong>Kept:</strong> the slip, the cause, the block, and the missing date.</p>
+                <p class="trace"><strong>Left out:</strong> "ugh" and "idk".</p>
+                <p class="trace note-you"><strong>Note to you:</strong> if you know when you'll next update them, say so. The rewrite does not promise an update for you.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case" id="cc-boundary" data-view="good">
+            <div class="situation">
+              <p class="label">What you wrote</p>
+              <p class="rough">stop dumping your tickets on me at 6pm, I have my own stuff</p>
+              <p class="setting"><span>To: Colleague</span><span>Tone: Assertive</span></p>
+            </div>
+            <div class="reply">
+              <p class="label">What you send</p>
+              <div class="views" role="group" aria-label="Which version to show" hidden><button type="button" data-v="draft" aria-pressed="false">Jargon version</button><button type="button" data-v="good" aria-pressed="true">Professional version</button></div>
+              <div class="v-draft">
+                <div class="msg"><p>I would appreciate it if we could <mark class="m-bad" style="--i:0">align on ticket allocation best practices</mark> to <mark class="m-bad" style="--i:1">optimize bandwidth across the team</mark>.</p></div>
+                <p class="why">Why not: it is so soft that the request disappears.</p>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p>Please don't pass me extra tickets at the end of the day; my own work already fills my time. If something is urgent, let's talk about it earlier in the day.</p></div>
+                <p class="trace"><strong>Kept:</strong> the boundary and the reason for it.</p>
+                <p class="trace"><strong>Left out:</strong> "dumping", which turns a request into an accusation.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case" id="cc-slack" data-view="good">
+            <div class="situation">
+              <p class="label">What you wrote</p>
+              <p class="rough">fixed the login thing, still waiting on design for dashboard, nothing else blocked</p>
+              <p class="setting"><span>To: Team channel</span><span>Tone: Neutral professional</span></p>
+            </div>
+            <div class="reply">
+              <p class="label">What you send</p>
+              <div class="views" role="group" aria-label="Which version to show" hidden><button type="button" data-v="draft" aria-pressed="false">Jargon version</button><button type="button" data-v="good" aria-pressed="true">Professional version</button></div>
+              <div class="v-draft">
+                <div class="msg"><p>Quick update: the <mark class="m-bad" style="--i:0">authentication workstream has been successfully remediated</mark>. The <mark class="m-bad" style="--i:1">dashboard initiative remains pending design deliverables</mark>. No further blockers have been identified at this time.</p></div>
+                <p class="why">Why not: it turns three plain facts into three inflated ones.</p>
+              </div>
+              <div class="v-good">
+                <div class="msg"><p>Login issue is fixed. The dashboard is waiting on design. Nothing else is blocked.</p></div>
+                <p class="trace"><strong>Kept:</strong> all three facts, at the same length.</p>
+                <p class="trace"><strong>Left out:</strong> nothing. A short message stays short.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="band" id="cc-how" aria-labelledby="cc-how-h">
+        <div class="wrap">
+          <div class="band-head">
+            <h2 id="cc-how-h">It changes how you say it, not what you mean.</h2>
+            <p>However you use it, it follows the same three steps, and it judges what the message has to do before choosing a tone.</p>
+          </div>
+          <div class="three">
+            <div class="t-read"><h3>Read</h3><p>Who the message is for, the channel, what you need from them, and what you actually mean.</p></div>
+            <div class="t-fact"><h3>Keep</h3><p>Every fact, request, concern and boundary you wrote. It never adds progress, dates, commitments, concessions, blame or authority.</p></div>
+            <div class="t-cc"><h3>Write</h3><p>Plain, specific and calm, led by the point, at the length the channel needs.</p></div>
+          </div>
+          <div class="ways">
+            <h3>Ways to use it</h3>
+            <p class="tags"><span>Rewrite a message</span><span>Use the tone you choose</span><span>Compare two tones</span><span>Turn rough notes into a message</span><span>Get feedback on a draft</span><span>Prepare talking points</span><span>Help while you draft</span></p>
+          </div>
+          <div class="split">
+            <div class="guide">
+              <h3>Written for the reader</h3>
+              <dl>
+                <div><dt>Manager</dt><dd>The status first, then what you need from them.</dd></div>
+                <div><dt>Colleague</dt><dd>Direct and friendly, with a specific ask.</dd></div>
+                <div><dt>Direct report</dt><dd>Clear expectations, said supportively.</dd></div>
+                <div><dt>Client</dt><dd>The outcome and the next step, without internal detail or blame.</dd></div>
+                <div><dt>Executive</dt><dd>The bottom line and any decision needed, in a few sentences.</dd></div>
+                <div><dt>Recruiter</dt><dd>Concise, positive and specific.</dd></div>
+                <div><dt>External partner</dt><dd>Courteous and precise, ready to stand as a written record.</dd></div>
+              </dl>
+            </div>
+            <div class="tones">
+              <h3>In the tone you need</h3>
+              <ul>
+                <li><strong>Neutral professional</strong>Everyday messages; the default.</li>
+                <li><strong>Diplomatic</strong>Disagreement, without conceding the point.</li>
+                <li><strong>Assertive</strong>Positions, refusals and boundaries, without hostility.</li>
+                <li><strong>Warm and collaborative</strong>Teamwork, thanks and requests between peers.</li>
+                <li><strong>Executive and concise</strong>The decision or bottom line first.</li>
+                <li><strong>Client-friendly</strong>Outcomes and next steps, without internal detail.</li>
+                <li><strong>Formal</strong>First contact and official records.</li>
+                <li><strong>Persuasive</strong>Proposals and negotiations, built on your facts.</li>
+                <li><strong>Empathetic</strong>Bad news, acknowledging the impact.</li>
+                <li><strong>Firm but respectful</strong>Repeated issues and final positions.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" id="cc-plain" aria-labelledby="cc-plain-h">
+        <div class="wrap">
+          <div class="band-head">
+            <h2 id="cc-plain-h">Professional does not mean jargon.</h2>
+            <p>Tap a phrase to see what it writes instead.</p>
+          </div>
+          <ul class="flips">
+            <li><button type="button" aria-pressed="false"><span class="was">circle back</span><span class="vh"> becomes </span><span class="now">follow up</span></button></li>
+            <li><button type="button" aria-pressed="false"><span class="was">leverage</span><span class="vh"> becomes </span><span class="now">use</span></button></li>
+            <li><button type="button" aria-pressed="false"><span class="was">actioned</span><span class="vh"> becomes </span><span class="now">done</span></button></li>
+            <li><button type="button" aria-pressed="false"><span class="was">socialize the plan</span><span class="vh"> becomes </span><span class="now">share the plan</span></button></li>
+            <li><button type="button" aria-pressed="false"><span class="was">bandwidth</span><span class="vh"> becomes </span><span class="now">time</span></button></li>
+            <li><button type="button" aria-pressed="false"><span class="was">touch base</span><span class="vh"> becomes </span><span class="now">talk</span></button></li>
+            <li><button type="button" aria-pressed="false"><span class="was">per my last email</span><span class="vh"> becomes </span><span class="now">the fact, restated briefly</span></button></li>
+            <li><button type="button" aria-pressed="false"><span class="was">at your earliest convenience</span><span class="vh"> becomes </span><span class="now">a specific date, if you have one</span></button></li>
+          </ul>
+          <div class="where">
+            <h3>Where it helps</h3>
+            <p class="tags"><span>Emails</span><span>Slack and Teams</span><span>Talking to your manager</span><span>Client messages</span><span>Project updates</span><span>Follow-ups</span><span>Disagreements</span><span>Status reports</span><span>Meeting notes</span><span>Rough thoughts</span></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="band" id="install" aria-labelledby="install-h">
+    <div class="wrap">
+      <div class="band-head">
+        <h2 id="install-h">Install it in the agent you use.</h2>
+        <p>Both skills come from the same repository. They need no API key, network service, runtime dependency or helper program.</p>
+      </div>
+      <div data-tabs>
+        <div class="itabs">
+          <div class="utabs" role="tablist" aria-label="Agents" hidden>
+            <button type="button" role="tab" aria-controls="p-claude">Claude</button>
+            <button type="button" role="tab" aria-controls="p-codex">Codex</button>
+            <button type="button" role="tab" aria-controls="p-cli">Skills CLI</button>
+            <button type="button" role="tab" aria-controls="p-gemini">Gemini CLI</button>
+            <button type="button" role="tab" aria-controls="p-copilot">Copilot CLI</button>
+          </div>
+        </div>
+        <div class="panel" id="p-claude">
+          <h3>Claude</h3>
+          <p class="notice">In Claude Code, use either the plugin or standalone copies, not both, or the same skill can appear twice.</p>
+          <div class="route">
+            <h4>Claude Code, as a plugin</h4>
+            <div class="code"><div class="code-head">Terminal</div><pre><code>claude plugin marketplace add Achal13jain/unsaid-rules
+claude plugin install unsaid-rules@unsaid-rules</code></pre></div>
+            <p>The plugin installs both skills. Adding the marketplace only makes its catalog available; the second command installs the plugin. In Claude Code you can also open Manage Plugins, select Marketplaces, choose Add and enter <code>https://github.com/Achal13jain/unsaid-rules</code>. Invoke the skills as <code>/unsaid-rules:client-judgment</code> and <code>/unsaid-rules:corporate-communication</code>.</p>
+          </div>
+          <div class="route">
+            <h4>Claude Code, as standalone skills</h4>
+            <p>Copy the skill folders into a project's <code>.claude/skills/</code>, or into <code>~/.claude/skills/</code> for all your projects.</p>
+            <div class="code"><div class="code-head">Terminal</div><pre><code>git clone https://github.com/Achal13jain/unsaid-rules.git
+cp -r unsaid-rules/skills/client-judgment unsaid-rules/skills/corporate-communication ~/.claude/skills/</code></pre></div>
+            <p>Invoke them as <code>/client-judgment</code> and <code>/corporate-communication</code>, followed by your request.</p>
+          </div>
+          <div class="route">
+            <h4>claude.ai and the Claude API</h4>
+            <p>Zip each folder in <code>skills/</code> on its own and upload it in claude.ai as a custom skill, or upload the folders through the Skills API.</p>
+          </div>
+        </div>
+        <div class="panel" id="p-codex">
+          <h3>Codex</h3>
+          <p>Codex reads a project's skills from <code>.agents/skills</code>, and your personal skills from <code>~/.agents/skills</code>. Copy the skill folders there.</p>
+          <div class="code"><div class="code-head">Terminal</div><pre><code>git clone https://github.com/Achal13jain/unsaid-rules.git
+mkdir -p ~/.agents/skills
+cp -r unsaid-rules/skills/client-judgment unsaid-rules/skills/corporate-communication ~/.agents/skills/</code></pre></div>
+          <p>Codex finds new skills automatically; restart it if they do not appear. Mention them with <code>$client-judgment</code> or <code>$corporate-communication</code>.</p>
+          <p class="tip">Gemini CLI and Copilot CLI also read <code>~/.agents/skills</code>, so this one copy works in all three.</p>
+        </div>
+        <div class="panel" id="p-cli">
+          <h3>Skills CLI</h3>
+          <p>Install each skill into the agents you choose.</p>
+          <div class="code"><div class="code-head">Terminal</div><pre><code>npx skills add Achal13jain/unsaid-rules --skill client-judgment
+npx skills add Achal13jain/unsaid-rules --skill corporate-communication</code></pre></div>
+          <p>Choose agents with <code>-a</code>, for example <code>-a codex</code>, <code>-a gemini-cli</code> or <code>-a github-copilot</code>. Add <code>-g</code> to install for all your projects.</p>
+        </div>
+        <div class="panel" id="p-gemini">
+          <h3>Gemini CLI</h3>
+          <p>Install each skill straight from the repository.</p>
+          <div class="code"><div class="code-head">Terminal</div><pre><code>gemini skills install https://github.com/Achal13jain/unsaid-rules.git --path skills/client-judgment
+gemini skills install https://github.com/Achal13jain/unsaid-rules.git --path skills/corporate-communication</code></pre></div>
+          <p>Gemini CLI asks you to confirm each install. It installs for your user by default; add <code>--scope workspace</code> to install for the current project only. In a running session, enter <code>/skills reload</code>.</p>
+        </div>
+        <div class="panel" id="p-copilot">
+          <h3>Copilot CLI</h3>
+          <p>Copilot CLI reads your personal skills from <code>~/.copilot/skills</code>, and a repository's skills from <code>.github/skills</code>. Copy the skill folders there.</p>
+          <div class="code"><div class="code-head">Terminal</div><pre><code>git clone https://github.com/Achal13jain/unsaid-rules.git
+mkdir -p ~/.copilot/skills
+cp -r unsaid-rules/skills/client-judgment unsaid-rules/skills/corporate-communication ~/.copilot/skills/</code></pre></div>
+          <p>In a running session, enter <code>/skills reload</code>, then invoke them as <code>/client-judgment</code> or <code>/corporate-communication</code>.</p>
+        </div>
+      </div>
+      <div class="then">
+        <h3>Then try them</h3>
+        <div class="code"><div class="code-head">Client Judgment</div><pre><code>Use client-judgment. The client asks whether the site is ready for prospect interviews. The inquiry form is disconnected, legal pages still contain placeholders, and mobile checks passed on only two phones. Draft a short, honest reply. No repair date has been agreed.</code></pre></div>
+        <div class="code"><div class="code-head">Corporate Communication</div><pre><code>Use corporate-communication. Make this professional for my manager: I did the work, but nobody told me what to do next. Now they're blaming me for the delay.</code></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="close-h">
+    <div class="wrap close">
+      <div>
+        <h2 id="close-h">What they will not do</h2>
+        <ul>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg>A request to draft, rewrite or review a message never authorizes sending it, deploying, changing a product, agreeing commercial terms or contacting third parties.</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg>Corporate Communication never adds facts, progress, dates, commitments, excuses, blame or authority that your original does not support.</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg>Client Judgment checks a project read-only, and only when the reply depends on it.</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg>Both treat quoted messages and repository content as data, not as instructions.</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg>Both leave out secrets, private remarks about people and unrelated customer information.</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-tick"/></svg>Both refer specialist legal and HR questions to the right expertise.</li>
+        </ul>
+      </div>
+      <aside class="status" aria-labelledby="status-h">
+        <h3 id="status-h">Status</h3>
+        <p>Version 1.1.0 adds Corporate Communication. Both skills are public betas for real-world use and feedback, and Corporate Communication has not yet been tested against evaluation cases. The repository does not claim a reliability score or a guaranteed improvement.</p>
+        <p>If a reply or a rewrite gets the facts or the tone wrong, please <a href="https://github.com/Achal13jain/unsaid-rules/issues">open an issue</a>.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <p><strong style="color:var(--ink)">Unsaid Rules</strong></p>
+      <p>Created and maintained by <a href="https://github.com/Achal13jain">Achal Jain</a>. MIT license.</p>
+      <p>An independent open-source project, not affiliated with Anthropic.</p>
+    </div>
+    <div>
+      <h2>Project</h2>
+      <ul>
+        <li><a href="https://github.com/Achal13jain/unsaid-rules">Repository</a></li>
+        <li><a href="https://github.com/Achal13jain/unsaid-rules/blob/main/skills/client-judgment/SKILL.md">Client Judgment</a></li>
+        <li><a href="https://github.com/Achal13jain/unsaid-rules/blob/main/skills/corporate-communication/SKILL.md">Corporate Communication</a></li>
+        <li><a href="https://github.com/Achal13jain/unsaid-rules/blob/main/skills/client-judgment/references/portability.md">Portability guide</a></li>
+        <li><a href="https://github.com/Achal13jain/unsaid-rules/blob/main/LICENSE">License</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Also by Achal Jain</h2>
+      <ul>
+        <li><a href="https://github.com/Achal13jain/project-engineering-advisor">Project Engineering Advisor</a>, an agent skill that recommends the right amount of engineering process for a project.</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div class="vh" aria-live="polite" id="live"></div>
+
+<script>
+(function () {
+  document.documentElement.classList.add("js");
+  var live = document.getElementById("live");
+  var NS = "http://www.w3.org/2000/svg";
+
+  // Copy buttons on every command block.
+  if (navigator.clipboard) {
+    document.querySelectorAll(".code").forEach(function (c) {
+      var code = c.querySelector("code");
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "copy";
+      b.setAttribute("aria-label", "Copy");
+      b.title = "Copy";
+      var s = document.createElementNS(NS, "svg");
+      s.setAttribute("class", "ic");
+      s.setAttribute("aria-hidden", "true");
+      var u = document.createElementNS(NS, "use");
+      u.setAttribute("href", "#i-copy");
+      s.appendChild(u);
+      b.appendChild(s);
+      b.addEventListener("click", function () {
+        navigator.clipboard.writeText(code.textContent).then(function () {
+          u.setAttribute("href", "#i-tick");
+          b.classList.add("done");
+          live.textContent = "Copied to the clipboard";
+          setTimeout(function () { u.setAttribute("href", "#i-copy"); b.classList.remove("done"); live.textContent = ""; }, 1800);
+        }, function () { live.textContent = "Copy failed; select the text instead"; });
+      });
+      c.querySelector(".code-head").appendChild(b);
+    });
+  }
+
+  // Tabs: the worked examples and the install methods.
+  document.querySelectorAll("[data-tabs]").forEach(function (box) {
+    var list = box.querySelector("[role=tablist]");
+    var tabs = Array.prototype.slice.call(list.querySelectorAll("[role=tab]"));
+    var panels = tabs.map(function (t, i) {
+      var p = document.getElementById(t.getAttribute("aria-controls"));
+      t.id = p.id + "-tab";
+      p.setAttribute("role", "tabpanel");
+      p.setAttribute("aria-labelledby", t.id);
+      p.tabIndex = 0;
+      t.addEventListener("click", function () { select(i, false); });
+      t.addEventListener("keydown", function (e) {
+        var k = e.key, n = tabs.length;
+        if (k === "ArrowRight") select((i + 1) % n, true);
+        else if (k === "ArrowLeft") select((i - 1 + n) % n, true);
+        else if (k === "Home") select(0, true);
+        else if (k === "End") select(n - 1, true);
+        else return;
+        e.preventDefault();
+      });
+      return p;
+    });
+    function select(i, focus) {
+      tabs.forEach(function (t, j) {
+        var on = i === j;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        panels[j].hidden = !on;
+      });
+      if (focus) tabs[i].focus();
+    }
+    list.hidden = false;
+    select(0, false);
+  });
+
+  // Jargon phrases flip to the plain wording.
+  document.querySelectorAll(".flips button").forEach(function (b) {
+    b.addEventListener("click", function () { b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true"); });
+  });
+
+  // The skill switch keeps the address in step, so each skill can be linked to directly.
+  var skillBox = document.querySelector(".skills");
+  if (skillBox) {
+    var skillTabs = Array.prototype.slice.call(skillBox.querySelectorAll(".skill-tabs [role=tab]"));
+    var showFor = function (id, scroll) {
+      var el = id && document.getElementById(id);
+      if (!el) return;
+      var panel = el.closest(".skill-panel");
+      if (panel) skillTabs.forEach(function (t) { if (t.getAttribute("aria-controls") === panel.id && t.getAttribute("aria-selected") !== "true") t.click(); });
+      if (scroll) (el.classList.contains("skill-panel") ? skillBox : el).scrollIntoView();
+    };
+    skillTabs.forEach(function (t) {
+      t.addEventListener("click", function () { if (history.replaceState) history.replaceState(null, "", "#" + t.getAttribute("aria-controls")); });
+    });
+    window.addEventListener("hashchange", function () { showFor(location.hash.slice(1), true); });
+    // Links into a skill always land on the skill switch, even when that skill is already open.
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      var id = a.getAttribute("href").slice(1);
+      var el = id && document.getElementById(id);
+      if (!el || !el.closest(".skill-panel")) return;
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (history.pushState && location.hash !== "#" + id) history.pushState(null, "", "#" + id);
+        showFor(id, true);
+      });
+    });
+    if (location.hash) showFor(location.hash.slice(1), true);
+  }
+
+  // Switch each worked example between the weak draft and the grounded reply.
+  document.querySelectorAll(".case").forEach(function (c) {
+    var group = c.querySelector(".views");
+    var buttons = group.querySelectorAll("button");
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        c.setAttribute("data-view", b.getAttribute("data-v"));
+        buttons.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      });
+    });
+    group.hidden = false;
+  });
+
+  // Light and dark theme switch, remembered in this browser.
+  var themeBtn = document.querySelector(".theme-toggle");
+  var rootEl = document.documentElement;
+  var systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+  var themeNow = function () { return rootEl.getAttribute("data-theme") || (systemDark.matches ? "dark" : "light"); };
+  var showTheme = function () {
+    var dark = themeNow() === "dark";
+    var label = dark ? "Switch to the light theme" : "Switch to the dark theme";
+    themeBtn.querySelector("use").setAttribute("href", dark ? "#i-sun" : "#i-moon");
+    themeBtn.setAttribute("aria-label", label);
+    themeBtn.title = label;
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.setAttribute("content", dark ? "#111615" : "#ffffff"); });
+  };
+  themeBtn.addEventListener("click", function () {
+    var next = themeNow() === "dark" ? "light" : "dark";
+    rootEl.setAttribute("data-theme", next);
+    try { localStorage.setItem("ur-theme", next); } catch (e) {}
+    showTheme();
+  });
+  if (systemDark.addEventListener) systemDark.addEventListener("change", showTheme);
+  themeBtn.hidden = false;
+  showTheme();
+  // The hero chat: a client question, a typing indicator, then the grounded reply.
+  var chat = document.querySelector(".chat");
+  if (chat) {
+    var EX = [
+      { them: "done?", you: "Yep, fixed and checked on the live site.", basis: "The fix is deployed and checked on the live site." },
+      { them: "Is the pricing page ready?", you: "Yes, the pricing page is ready. The approved price is displayed correctly on the live site, and the contact link has been checked.", basis: "The live page shows the approved price, and the contact link works." },
+      { them: "Can you add a booking portal by Friday, at no extra cost?", you: "The booking portal would extend the agreed scope. I can gather the requirements for the PM to assess timing and pricing, but I can't confirm Friday delivery or include it at the current price.", basis: "The portal is outside the agreed scope, and the PM approves pricing." },
+      { them: "Is the live site ready for the demo?", you: "The staging checks have passed, but the update isn't live yet. I'll deploy now and message you as soon as it's confirmed on the live site; treat that message as the go-ahead for the demo.", basis: "Staging passed, and the sender has said they will deploy now." }
+    ];
+    var body = chat.querySelector(".chat-body");
+    var playBtn = chat.querySelector(".chat-play");
+    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var playing = false, visible = true, idx = 0, timer = null;
+    var el = function (tag, cls, text) { var n = document.createElement(tag); n.className = cls; if (text) n.textContent = text; return n; };
+    var wait = function (ms, fn) { clearTimeout(timer); timer = setTimeout(function () { if (playing && visible) fn(); else wait(400, fn); }, ms); };
+    var showAll = function (ex) {
+      body.textContent = "";
+      body.appendChild(el("p", "bubble them", ex.them));
+      body.appendChild(el("p", "bubble you", ex.you));
+      var b = el("p", "basis"); b.appendChild(el("span", "", "Rests on")); b.appendChild(document.createTextNode(ex.basis)); body.appendChild(b);
+    };
+    var run = function () {
+      var ex = EX[idx];
+      body.textContent = "";
+      body.appendChild(el("p", "bubble them pop", ex.them));
+      wait(900, function () {
+        var dots = el("p", "bubble you typing pop"); dots.setAttribute("aria-hidden", "true");
+        dots.innerHTML = "<i></i><i></i><i></i>";
+        body.appendChild(dots);
+        wait(1300, function () {
+          var reply = el("p", "bubble you caret");
+          body.replaceChild(reply, dots);
+          var k = 0;
+          var type = function () {
+            k = Math.min(ex.you.length, k + 2);
+            reply.textContent = ex.you.slice(0, k);
+            if (k < ex.you.length) wait(22, type);
+            else {
+              reply.classList.remove("caret");
+              var b = el("p", "basis pop"); b.appendChild(el("span", "", "Rests on")); b.appendChild(document.createTextNode(ex.basis)); body.appendChild(b);
+              wait(3800, function () { idx = (idx + 1) % EX.length; run(); });
+            }
+          };
+          type();
+        });
+      });
+    };
+    var setPlaying = function (v) {
+      playing = v;
+      playBtn.querySelector("use").setAttribute("href", v ? "#i-pause" : "#i-play");
+      playBtn.setAttribute("aria-label", v ? "Pause the chat" : "Play the chat");
+      playBtn.title = playBtn.getAttribute("aria-label");
+    };
+    playBtn.addEventListener("click", function () {
+      if (playing) { setPlaying(false); return; }
+      setPlaying(true);
+      if (reducedMotion && timer === null) run();
+    });
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(chat);
+    playBtn.hidden = false;
+    if (reducedMotion) { showAll(EX[idx]); setPlaying(false); }
+    else { setPlaying(true); run(); }
+  }
+})();
+</script>
+</body>
+</html>
